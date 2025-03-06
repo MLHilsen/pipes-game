@@ -6,6 +6,7 @@ public class PipesPuzzle
         grid.createGrid(5);
         grid.printGrid();
 
-        
+        System.out.println();
+        grid.testing();
     }
 }
