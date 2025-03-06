@@ -6,12 +6,6 @@ public class PipesPuzzle
         grid.createGrid(5);
         grid.breakWalls();
 
-        //grid.printGrid();
-
-        //System.out.println();
-        //grid.testing();
-
-
         GUI gui = new GUI();
         gui.createGUI(grid);
     }

@@ -55,6 +55,7 @@ public class Grid
             // System.out.println("Skipping wall break to prevent a cell from having no walls.");
             return;
         }
+
         if (first.coords[0] == second.coords[0]) // If the ROW is the same
         {
             if (first.coords[1] > second.coords[1]) // If first is to the RIGHT of second
@@ -107,13 +108,6 @@ public class Grid
         List<Cell> frontier = new ArrayList<>();
         frontier.addAll(getNeighbors(current.coords[0], current.coords[1], false));
 
-        // System.out.println(Arrays.toString(grid[i][j].coords));
-        // System.out.println("");
-        // for (Cell cell : frontier) {
-        //     System.out.println(Arrays.toString(cell.coords));
-        // }
-        // System.out.println("");
-
         while (!frontier.isEmpty())
         {
             current = frontier.remove(random.nextInt(frontier.size()));
@@ -126,11 +120,8 @@ public class Grid
                 Cell visitedNeighbor = visitedNeighbors.get(random.nextInt(visitedNeighbors.size()));
 
                 // Break wall between current and visitedNeighbor
-                // System.out.printf("Breaking wall between: (%d, %d) and (%d, %d)%n", current.coords[0], current.coords[1], visitedNeighbor.coords[0], visitedNeighbor.coords[1]);
                 breakWall(current, visitedNeighbor);
             }
-
-            //frontier.addAll(getNeighbors(current.coords[0], current.coords[1], false));
 
             for (Cell neighbor : getNeighbors(current.coords[0], current.coords[1], false)) {
                 if (!frontier.contains(neighbor) && !neighbor.isVisited()) {
@@ -146,12 +137,6 @@ public class Grid
                     }
                 }
             }
-
-            // System.out.println("");
-            // for (Cell cell : frontier) {
-            //     System.out.println(Arrays.toString(cell.coords));
-            // }
-            // String userInput = scanner.nextLine();
         }
     }
 
@@ -192,38 +177,4 @@ public class Grid
         }
         
     }
-
-    public void printGrid()
-    {
-        for (int i = 0; i < dimensions; i++)
-        {
-            for (int j = 0; j < dimensions; j++)
-            {
-                System.out.print(grid[i][j].printCell());
-            }
-            System.out.println();
-        }
-    }
-
-    public void testing()
-    {
-        System.out.printf("Has Bottom Wall: %b%n", grid[0][0].hasBottomWall);
-        System.out.printf("Has Top Wall: %b%n", grid[0][0].hasTopWall);
-        System.out.printf("Has Left Wall: %b%n", grid[0][0].hasLeftWall);
-        System.out.printf("Has Right Wall: %b%n", grid[0][0].hasRightWall);
-    }
 }
-
-
-
-
-
-
-
-/*
- * Create a grid of cells of dimention X dimention size
- * Use random algorithm to 'break walls' to create a loop
- * Place correct pipe tile in each cell given how many walls are broken
- * Shuffle rotation of every cell
- * Choose either a random cell or the center cell as the water source
- */
