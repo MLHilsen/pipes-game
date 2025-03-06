@@ -1,7 +1,8 @@
 public class Cell {
     private Segment segment = Segment.Straight;
     private boolean visited = false;
-    private String[] walls = {"up", "down", "left", "right"};
+    public boolean hasLeftWall = true, hasRightWall = true, hasTopWall = true, hasBottomWall = true;
+    public int[] coords = new int[2];
     
     enum Segment
     {
@@ -14,6 +15,12 @@ public class Cell {
     public void setSegment(Segment segment)
     {
         this.segment = segment;
+    }
+
+    public void setCoords(int i, int j)
+    {
+        coords[0] = i;
+        coords[1] = j;
     }
 
     public void visit()
