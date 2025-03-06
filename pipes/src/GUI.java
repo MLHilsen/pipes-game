@@ -14,13 +14,29 @@ public class GUI
         JPanel gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(grid.dimensions, grid.dimensions)); // Layout for a grid of buttons
 
+
+        ImageIcon straight = new ImageIcon("src/imgs/Straight.png");
+        ImageIcon fork = new ImageIcon("src/imgs/Fork.png");
+        ImageIcon corner = new ImageIcon("src/imgs/Corner.png");
+        ImageIcon end = new ImageIcon("src/imgs/End.png");
+
         // Add buttons to the grid panel corresponding to the grid
-        for (int i = 0; i < grid.dimensions; i++) {
-            for (int j = 0; j < grid.dimensions; j++) {
-                RotatedButton button = new RotatedButton(grid.grid[i][j].printCell());
+        for (int i = 0; i < grid.dimensions; i++)
+        {
+            for (int j = 0; j < grid.dimensions; j++)
+            {
+                Cell.Segment segment = grid.grid[i][j].getSegment();
+
+                RotatedButton button;
+                switch (segment) {
+                    case Straight -> {button = new RotatedButton(straight);}
+                    case Fork -> {button = new RotatedButton(fork);}
+                    case Corner -> {button = new RotatedButton(corner);}
+                    case End -> {button = new RotatedButton(end);}
+                    default -> throw new AssertionError();
+                }
+                
                 button.setPreferredSize(new Dimension(80, 80));
-
-
 
     
                 // Add action listener to update the button's label on click
@@ -45,9 +61,13 @@ public class GUI
 
 class RotatedButton extends JButton {
     private double angle = 0; // Current rotation angle in radians
+    private final ImageIcon icon;
 
-    public RotatedButton(String text) {
-        super(text);
+    public RotatedButton(ImageIcon originalIcon) {
+        // Scale the image to fit the button size
+        this.icon = scaleIcon(originalIcon, 80, 80); // Replace 80 with your button size
+        setIcon(this.icon); // Set the scaled icon
+
         setContentAreaFilled(false); // Make the button background transparent
         setBorderPainted(false); // Remove the border
         setFocusPainted(false); // Remove the focus border
@@ -71,5 +91,11 @@ class RotatedButton extends JButton {
         super.paintComponent(g2d);
 
         g2d.dispose();
+    }
+
+    private ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
+        Image image = icon.getImage(); // Get the image from the icon
+        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH); // Scale the image
+        return new ImageIcon(scaledImage); // Return the scaled image as an ImageIcon
     }
 }

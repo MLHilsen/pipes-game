@@ -34,6 +34,11 @@ public class Cell {
         this.segment = segment;
     }
 
+    public Segment getSegment()
+    {
+        return segment;
+    }
+
     public void setCoords(int i, int j)
     {
         coords[0] = i;
