@@ -1,8 +1,7 @@
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class Grid
 {
@@ -51,6 +50,11 @@ public class Grid
 
     private void breakWall(Cell first, Cell second)
     {
+        if (first.numWalls() <= 1 || second.numWalls() <= 1)
+        {
+            // System.out.println("Skipping wall break to prevent a cell from having no walls.");
+            return;
+        }
         if (first.coords[0] == second.coords[0]) // If the ROW is the same
         {
             if (first.coords[1] > second.coords[1]) // If first is to the RIGHT of second
@@ -76,18 +80,14 @@ public class Grid
                     first.hasTopWall = false;
                     second.hasBottomWall = false;
             }
-        }
-        if (first.coords[0] == 0 && first.coords[1] == 0)
-        {
-            System.out.println("Checking (0, 0), Top Wall: " + first.hasTopWall);
-        }
-        
+        }        
     }
 
     public void breakWalls()
     {
         Random random = new Random();
         _breakWalls(random, random.nextInt(dimensions), random.nextInt(dimensions));
+        setCellSegments();
     }
 
     private void _breakWalls(Random random, int i, int j)
@@ -101,10 +101,11 @@ public class Grid
          * Rerun func from target cell
          * Repeat until back to start
          */
+        Cell current = grid[i][j];
+        current.visit();
 
-        grid[i][j].visit();
         List<Cell> frontier = new ArrayList<>();
-        frontier.addAll(getNeighbors(i, j, false));
+        frontier.addAll(getNeighbors(current.coords[0], current.coords[1], false));
 
         // System.out.println(Arrays.toString(grid[i][j].coords));
         // System.out.println("");
@@ -115,7 +116,8 @@ public class Grid
 
         while (!frontier.isEmpty())
         {
-            Cell current = frontier.remove(random.nextInt(frontier.size()));
+            current = frontier.remove(random.nextInt(frontier.size()));
+            current.visit();
 
             List<Cell> visitedNeighbors = getNeighbors(current.coords[0], current.coords[1], true);
 
@@ -124,15 +126,26 @@ public class Grid
                 Cell visitedNeighbor = visitedNeighbors.get(random.nextInt(visitedNeighbors.size()));
 
                 // Break wall between current and visitedNeighbor
-                System.out.printf("Breaking wall between: (%d, %d) and (%d, %d)%n", current.coords[0], current.coords[1], visitedNeighbor.coords[0], visitedNeighbor.coords[1]);
+                // System.out.printf("Breaking wall between: (%d, %d) and (%d, %d)%n", current.coords[0], current.coords[1], visitedNeighbor.coords[0], visitedNeighbor.coords[1]);
                 breakWall(current, visitedNeighbor);
             }
 
-            current.visit();
-            frontier.addAll(getNeighbors(current.coords[0], current.coords[1], false));
-            
-            Set<Cell> frontierSet = new HashSet<>(frontier);
-            frontier = new ArrayList<>(frontierSet);
+            //frontier.addAll(getNeighbors(current.coords[0], current.coords[1], false));
+
+            for (Cell neighbor : getNeighbors(current.coords[0], current.coords[1], false)) {
+                if (!frontier.contains(neighbor) && !neighbor.isVisited()) {
+                    frontier.add(neighbor);
+                }
+            }
+
+            for (int x = 0; x < dimensions; x++) {
+                for (int y = 0; y < dimensions; y++) {
+                    if (!grid[x][y].isVisited()) {
+                        // If a cell is unvisited, process it
+                        _breakWalls(random, x, y);
+                    }
+                }
+            }
 
             // System.out.println("");
             // for (Cell cell : frontier) {
@@ -140,6 +153,44 @@ public class Grid
             // }
             // String userInput = scanner.nextLine();
         }
+    }
+
+    private void setCellSegments()
+    {
+        for (Cell[] row : grid)
+        {
+            for (Cell current : row)
+            {
+                int numWalls = current.numWalls();
+
+                switch (numWalls) {
+                    case 1 -> // One Wall = Fork
+                        current.setSegment(Cell.Segment.Fork);
+
+                    case 3 -> // Three Walls = End
+                        current.setSegment(Cell.Segment.End);
+
+                    case 2 -> {
+                        // Two Walls = Straight & Corner
+                        if ((current.hasBottomWall && current.hasTopWall) || (current.hasLeftWall && current.hasRightWall))
+                        {
+                            current.setSegment(Cell.Segment.Straight);
+                        }
+                        else
+                        {
+                            current.setSegment(Cell.Segment.Corner);
+                        }
+                    }
+
+                    default -> {
+                        System.out.println("Didnt work");
+                        System.out.println(Arrays.toString(current.coords));
+                        System.out.println(numWalls);
+                    }
+                }
+            }
+        }
+        
     }
 
     public void printGrid()

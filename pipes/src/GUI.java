@@ -17,7 +17,7 @@ public class GUI
         // Add buttons to the grid panel corresponding to the grid
         for (int i = 0; i < grid.dimensions; i++) {
             for (int j = 0; j < grid.dimensions; j++) {
-                JButton button = new JButton("Cell " + i + "," + j);
+                JButton button = new JButton(grid.grid[i][j].printCell());
                 button.setPreferredSize(new Dimension(80, 80));
 
                 final int row = i;

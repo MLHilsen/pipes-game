@@ -4,11 +4,12 @@ public class PipesPuzzle
     {
         Grid grid = new Grid();
         grid.createGrid(5);
-        // grid.printGrid();
         grid.breakWalls();
 
-        System.out.println();
-        grid.testing();
+        //grid.printGrid();
+
+        //System.out.println();
+        //grid.testing();
 
 
         GUI gui = new GUI();

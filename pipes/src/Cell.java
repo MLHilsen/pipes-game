@@ -1,10 +1,13 @@
+import java.util.Arrays;
+import java.util.List;
+
 public class Cell {
-    private Segment segment = Segment.Straight;
+    private Segment segment;
     private boolean visited = false;
     public boolean hasLeftWall = true, hasRightWall = true, hasTopWall = true, hasBottomWall = true;
     public int[] coords = new int[2];
     
-    enum Segment
+    public enum Segment
     {
         Straight,   // 2 Walls
         Corner,     // 2 Walls
@@ -12,6 +15,20 @@ public class Cell {
         End         // 3 Walls
     }
     
+    public int numWalls()
+    {
+        List<Boolean> walls = Arrays.asList(hasBottomWall, hasTopWall, hasLeftWall, hasRightWall);
+
+        int numWalls = 0;
+        for (Boolean wall : walls) {
+            if (wall) {
+                numWalls++;
+            }
+        }
+
+        return numWalls;
+    }
+
     public void setSegment(Segment segment)
     {
         this.segment = segment;
