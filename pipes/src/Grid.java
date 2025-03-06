@@ -5,14 +5,17 @@ import java.util.Random;
 
 public class Grid
 {
-    public int dimensions = 5;
-    public Cell[][] grid = new Cell[dimensions][dimensions];
+    public Cell[][] grid;
+    public int dimensions;
     
-    public void createGrid(int dimentions)
+    public void createGrid(int dimensions)
     {
-        for (int i = 0; i < dimentions; i++)
+        this.dimensions = dimensions;
+        this.grid = new Cell[dimensions][dimensions];
+        
+        for (int i = 0; i < dimensions; i++)
         {
-            for (int j = 0; j < dimentions; j++)
+            for (int j = 0; j < dimensions; j++)
             {
                 grid[i][j] = new Cell();
                 grid[i][j].setCoords(i, j);
@@ -50,12 +53,6 @@ public class Grid
 
     private void breakWall(Cell first, Cell second)
     {
-        if (first.numWalls() <= 1 || second.numWalls() <= 1)
-        {
-            // System.out.println("Skipping wall break to prevent a cell from having no walls.");
-            return;
-        }
-
         if (first.coords[0] == second.coords[0]) // If the ROW is the same
         {
             if (first.coords[1] > second.coords[1]) // If first is to the RIGHT of second
@@ -87,59 +84,32 @@ public class Grid
     public void breakWalls()
     {
         Random random = new Random();
-        _breakWalls(random, random.nextInt(dimensions), random.nextInt(dimensions));
+        _breakWalls_r(random, random.nextInt(dimensions), random.nextInt(dimensions));
         setCellSegments();
     }
 
-    private void _breakWalls(Random random, int i, int j)
+    private void _breakWalls_r(Random random, int i, int j)
     {
-        // Scanner scanner = new Scanner(System.in);
-        /*
-         * Visit intro cell
-         * Get all valid directions
-         * Choose one at random
-         * Break walls between cells
-         * Rerun func from target cell
-         * Repeat until back to start
-         */
         Cell current = grid[i][j];
         current.visit();
 
-        List<Cell> frontier = new ArrayList<>();
-        frontier.addAll(getNeighbors(current.coords[0], current.coords[1], false));
+        while (true)
+        { 
+            List<Cell> frontier = new ArrayList<>();
+            frontier.addAll(getNeighbors(current.coords[0], current.coords[1], false));
 
-        while (!frontier.isEmpty())
-        {
-            current = frontier.remove(random.nextInt(frontier.size()));
-            current.visit();
-
-            List<Cell> visitedNeighbors = getNeighbors(current.coords[0], current.coords[1], true);
-
-            if (!visitedNeighbors.isEmpty())
+            if (frontier.isEmpty())
             {
-                Cell visitedNeighbor = visitedNeighbors.get(random.nextInt(visitedNeighbors.size()));
-
-                // Break wall between current and visitedNeighbor
-                breakWall(current, visitedNeighbor);
+                return;
             }
 
-            for (Cell neighbor : getNeighbors(current.coords[0], current.coords[1], false)) {
-                if (!frontier.contains(neighbor) && !neighbor.isVisited()) {
-                    frontier.add(neighbor);
-                }
-            }
+            Cell moveTo = frontier.get(random.nextInt(frontier.size()));
+            breakWall(current, moveTo);
 
-            for (int x = 0; x < dimensions; x++) {
-                for (int y = 0; y < dimensions; y++) {
-                    if (!grid[x][y].isVisited()) {
-                        // If a cell is unvisited, process it
-                        _breakWalls(random, x, y);
-                    }
-                }
-            }
+            _breakWalls_r(random, moveTo.coords[0], moveTo.coords[1]);
         }
     }
-
+    
     private void setCellSegments()
     {
         for (Cell[] row : grid)
