@@ -23,6 +23,17 @@ public class Grid
         }
     }
 
+    public boolean verifyRotations() {
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                Cell cell = grid[i][j];
+
+                if (cell.isLocked() && !cell.isCorrectlyRotated()) {return false;} // Check if cell is locked and correctly rotated
+            }
+        }
+        return true;
+    }
+
     private List<Cell> getNeighbors(int i, int j, boolean visited) // row, col
     {
         List<Cell> neighbors = new ArrayList<>();

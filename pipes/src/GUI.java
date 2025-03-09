@@ -7,7 +7,7 @@ public class GUI
 {
     public void createGUI(Grid grid)
     {
-        JFrame frame = new JFrame("Grid Display");
+        JFrame frame = new JFrame("Pipes Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 500);
 
@@ -29,14 +29,15 @@ public class GUI
         {
             for (int j = 0; j < grid.dimensions; j++)
             {
+                Cell cell = grid.grid[i][j];
                 Cell.Segment segment = grid.grid[i][j].getSegment();
 
                 RotatedButton button;
                 switch (segment) {
-                    case Straight -> {button = new RotatedButton(straight);}
-                    case Fork -> {button = new RotatedButton(fork);}
-                    case Corner -> {button = new RotatedButton(corner);}
-                    case End -> {button = new RotatedButton(end);}
+                    case Straight -> {button = new RotatedButton(straight, cell);}
+                    case Fork -> {button = new RotatedButton(fork, cell);}
+                    case Corner -> {button = new RotatedButton(corner, cell);}
+                    case End -> {button = new RotatedButton(end, cell);}
                     default -> throw new AssertionError();
                 }
                 
@@ -67,9 +68,23 @@ public class GUI
                 randomlyRotateButton(button);
             }
         }
+
+        // Add a verifier button
+        JButton verifyButton = new JButton("Verify Rotations");
+        verifyButton.addActionListener(e -> {
+            boolean isValid = grid.verifyRotations();
+            if (isValid) {
+                JOptionPane.showMessageDialog(frame, "All rotations are correct!");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Some rotations are incorrect.");
+            }
+        });
     
-        // Add the grid panel to the frame
-        frame.add(gridPanel);
+        // Add the elements to the frame
+        frame.add(gridPanel, BorderLayout.CENTER);
+        frame.add(verifyButton, BorderLayout.SOUTH);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
 
         int totalWidth = grid.dimensions * buttonSize;
         int totalHeight = grid.dimensions * buttonSize;

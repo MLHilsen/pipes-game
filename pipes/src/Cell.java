@@ -6,6 +6,8 @@ public class Cell {
     private boolean visited = false;
     public boolean hasLeftWall = true, hasRightWall = true, hasTopWall = true, hasBottomWall = true;
     public int[] coords = new int[2];
+    public int rotation = 0;
+    public boolean locked = false;
     
     public enum Segment
     {
@@ -55,13 +57,57 @@ public class Cell {
         return visited;
     }
 
-    public String printCell()
+    public void setRotation(int rotation)
     {
-        return switch (segment) {
-            case Straight -> "|";
-            case Corner -> "L";
-            case Fork -> "T";
-            case End -> "O";
-        };
+        this.rotation = rotation;
+    }
+
+    public void rotate(int degrees)
+    {
+        this.rotation = (this.rotation + degrees) % 360; // Normalize to 0-360 degrees
+        if (this.rotation < 0) {
+            this.rotation += 360; // Ensure rotation is positive
+        }
+    }
+
+    public int getRotation()
+    {
+        return rotation;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isCorrectlyRotated()
+    {
+        System.out.println("Checking cell at (" + coords[0] + ", " + coords[1] + "):");
+        System.out.println("Segment: " + segment);
+        System.out.println("Rotation: " + rotation);
+        System.out.println("Walls: Top=" + hasTopWall + ", Bottom=" + hasBottomWall + ", Left=" + hasLeftWall + ", Right=" + hasRightWall);
+
+        switch (segment) {
+            case Straight -> {
+                if (hasBottomWall && hasTopWall && !hasLeftWall && !hasRightWall) // If horizontal straight
+                {
+                    if (this.rotation == 90 || this.rotation == 270) {return true;}
+                }
+                if (!hasBottomWall && !hasTopWall && hasLeftWall && hasRightWall) // If vertical straight
+                {
+                    if (this.rotation == 0 || this.rotation == 180) {return true;}
+                }
+            }
+                
+            default -> throw new AssertionError();
+        }
+        
+
+
+
+        return false;
     }
 }

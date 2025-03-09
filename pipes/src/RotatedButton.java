@@ -10,10 +10,12 @@ public class RotatedButton extends JButton
     private Timer holdTimer;
     private static boolean isMousePressed = false;
     private static boolean isLockingOperation = false;
+    private final Cell cell;
 
-    public RotatedButton(ImageIcon originalIcon)
+    public RotatedButton(ImageIcon originalIcon, Cell cell)
     {
         // Scale the image to fit the button size
+        this.cell = cell;
         this.icon = scaleIcon(originalIcon, 80, 80); // Replace 80 with your button size
         setIcon(this.icon); // Set the scaled icon
 
@@ -25,6 +27,7 @@ public class RotatedButton extends JButton
         holdTimer = new Timer(250, e -> {
             isLockingOperation = !locked; // Set the operation type based on the initial cell's state
             setLocked(!locked);
+            cell.setLocked(locked); // THIS LINE MIGHT NOT BE NECISSARY (HERE)
         });
         holdTimer.setRepeats(false); // Ensure the timer only fires once
 
@@ -63,8 +66,10 @@ public class RotatedButton extends JButton
                     if (component instanceof RotatedButton button) {
                         if (isLockingOperation && !button.isLocked()) {
                             button.setLocked(true); // Lock the cell
+                            cell.setLocked(true);
                         } else if (!isLockingOperation && button.isLocked()) {
                             button.setLocked(false); // Unlock the cell
+                            cell.setLocked(false);
                         }
                     }
                 }
@@ -92,7 +97,9 @@ public class RotatedButton extends JButton
         {
             angle += Math.toRadians(degrees); // Increment the angle by 90 degrees
             normalizeAngle();
+            cell.rotate((int) degrees);
             repaint();
+            System.out.println(cell.getRotation()); // (HERE)
         }
     }
 
@@ -102,7 +109,9 @@ public class RotatedButton extends JButton
         {
             angle -= Math.toRadians(degrees); // Decrement the angle by the specified degrees
             normalizeAngle();
+            cell.rotate(-(int) degrees); 
             repaint(); // Repaint the button to reflect the rotation
+            System.out.println(cell.getRotation()); // (HERE)
         }
     }
 
