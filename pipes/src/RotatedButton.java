@@ -1,6 +1,5 @@
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class RotatedButton extends JButton
@@ -9,6 +8,8 @@ public class RotatedButton extends JButton
     private final ImageIcon icon;
     private boolean locked = false;
     private Timer holdTimer;
+    private static boolean isMousePressed = false;
+    private static boolean isLockingOperation = false;
 
     public RotatedButton(ImageIcon originalIcon)
     {
@@ -21,7 +22,10 @@ public class RotatedButton extends JButton
         setFocusPainted(false); // Remove the focus border
         setFocusable(false); // Remove button focusability
 
-        holdTimer = new Timer(250, e -> toggleLockedState()); // 250ms = 0.25 seconds
+        holdTimer = new Timer(250, e -> {
+            isLockingOperation = !locked; // Set the operation type based on the initial cell's state
+            setLocked(!locked);
+        });
         holdTimer.setRepeats(false); // Ensure the timer only fires once
 
         addMouseListener(new MouseAdapter() {
@@ -29,6 +33,7 @@ public class RotatedButton extends JButton
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     holdTimer.start(); // Start the timer on mouse press
+                    isMousePressed = true;
                 }
             }
 
@@ -36,6 +41,33 @@ public class RotatedButton extends JButton
             public void mouseReleased(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     holdTimer.stop(); // Stop the timer on mouse release
+                    isMousePressed = false;
+                    isLockingOperation = false;
+                }
+            }
+        });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (isMousePressed && holdTimer.isRunning()) {
+                    // Ignore drag events until the hold timer completes
+                    return;
+                }
+
+                if (isMousePressed) {
+                    // Get the component under the mouse pointer
+                    Component component = SwingUtilities.getDeepestComponentAt(
+                            getParent(), e.getX() + getX(), e.getY() + getY());
+
+                    if (component instanceof RotatedButton) {
+                        RotatedButton button = (RotatedButton) component;
+                        if (isLockingOperation && !button.isLocked()) {
+                            button.setLocked(true); // Lock the cell
+                        } else if (!isLockingOperation && button.isLocked()) {
+                            button.setLocked(false); // Unlock the cell
+                        }
+                    }
                 }
             }
         });
@@ -83,10 +115,14 @@ public class RotatedButton extends JButton
         }
     }
 
-    private void toggleLockedState()
+    public void setLocked(boolean locked)
     {
-        locked = !locked; // Toggle the locked state
-        repaint(); // Repaint the button to reflect the change
+        this.locked = locked;
+        repaint();
+    }
+
+    public boolean isLocked(){
+        return locked;
     }
 
     @Override
