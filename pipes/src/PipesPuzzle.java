@@ -8,7 +8,7 @@ public class PipesPuzzle
         {
             try
             {
-                grid.createGrid(8);
+                grid.createGrid(4);
                 grid.breakWalls();
                 break;
             }

@@ -11,11 +11,16 @@ public class RotatedButton extends JButton
     private static boolean isMousePressed = false;
     private static boolean isLockingOperation = false;
     private final Cell cell;
+    private final Grid grid;
+    private final Runnable onGridComplete;
 
-    public RotatedButton(ImageIcon originalIcon, Cell cell, int buttonSize)
+    public RotatedButton(ImageIcon originalIcon, Cell cell, int buttonSize, Grid grid, Runnable onGridComplete)
     {
         // Scale the image to fit the button size
         this.cell = cell;
+        this.grid = grid;
+        this.onGridComplete = onGridComplete;
+
         this.icon = scaleIcon(originalIcon, buttonSize, buttonSize); // Replace 80 with your button size
         setIcon(this.icon); // Set the scaled icon
 
@@ -122,6 +127,17 @@ public class RotatedButton extends JButton
     {
         this.locked = locked;
         cell.setLocked(locked);
+
+        // Check if the grid is complete
+        if (grid.isComplete())
+        {
+            // Execute the callback
+            if (onGridComplete != null)
+            {
+                onGridComplete.run();
+            }
+        }
+
         repaint();
     }
 

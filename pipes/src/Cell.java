@@ -156,9 +156,6 @@ public class Cell {
                 
             default -> throw new AssertionError();
         }
-        
-
-
 
         return false;
     }

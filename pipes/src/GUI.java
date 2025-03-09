@@ -52,10 +52,10 @@ public class GUI
 
                 RotatedButton button;
                 switch (segment) {
-                    case Straight -> {button = new RotatedButton(straight, cell, buttonSize);}
-                    case Fork -> {button = new RotatedButton(fork, cell, buttonSize);}
-                    case Corner -> {button = new RotatedButton(corner, cell, buttonSize);}
-                    case End -> {button = new RotatedButton(end, cell, buttonSize);}
+                    case Straight -> {button = new RotatedButton(straight, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                    case Fork -> {button = new RotatedButton(fork, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                    case Corner -> {button = new RotatedButton(corner, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                    case End -> {button = new RotatedButton(end, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
                     default -> throw new AssertionError();
                 }
                 
@@ -90,20 +90,7 @@ public class GUI
         // Add a verifier button
         JButton verifyButton = new JButton("Verify Rotations");
         verifyButton.addActionListener(e -> {
-            boolean isValid = grid.verifyRotations();
-            boolean isComplete = grid.isComplete();
-
-            if (isValid && isComplete)
-            {
-                JOptionPane.showMessageDialog(frame, "Puzzle complete!");
-            }
-            else if (isValid)
-            {
-                JOptionPane.showMessageDialog(frame, "So far so good!");
-            } else
-            {
-                JOptionPane.showMessageDialog(frame, "Some rotations are incorrect.");
-            }
+            displayVerifierMessage(frame, grid);
         });
     
         // Add the elements to the frame
@@ -127,6 +114,24 @@ public class GUI
         int rotation = random.nextInt(4) * 90;
         // Apply the rotation to the cell
         button.rotate(rotation);
+    }
+
+    public void displayVerifierMessage(JFrame frame, Grid grid)
+    {
+        boolean isValid = grid.verifyRotations();
+        boolean isComplete = grid.isComplete();
+
+        if (isValid && isComplete)
+        {
+            JOptionPane.showMessageDialog(frame, "Puzzle complete!");
+        }
+        else if (isValid)
+        {
+            JOptionPane.showMessageDialog(frame, "So far so good!");
+        } else
+        {
+            JOptionPane.showMessageDialog(frame, "Some rotations are incorrect.");
+        }
     }
 }
 
