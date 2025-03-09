@@ -1,0 +1,117 @@
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.*;
+
+public class RotatedButton extends JButton
+{
+    private double angle = 0; // Current rotation angle in radians
+    private final ImageIcon icon;
+    private boolean locked = false;
+    private Timer holdTimer;
+
+    public RotatedButton(ImageIcon originalIcon)
+    {
+        // Scale the image to fit the button size
+        this.icon = scaleIcon(originalIcon, 80, 80); // Replace 80 with your button size
+        setIcon(this.icon); // Set the scaled icon
+
+        setContentAreaFilled(false); // Make the button background transparent
+        setBorderPainted(false); // Remove the border
+        setFocusPainted(false); // Remove the focus border
+        setFocusable(false); // Remove button focusability
+
+        holdTimer = new Timer(250, e -> toggleLockedState()); // 250ms = 0.25 seconds
+        holdTimer.setRepeats(false); // Ensure the timer only fires once
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    holdTimer.start(); // Start the timer on mouse press
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    holdTimer.stop(); // Stop the timer on mouse release
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void processMouseEvent(MouseEvent e)
+    {
+        // Allow right-clicks to be processed without gaining focus
+        if (SwingUtilities.isRightMouseButton(e))
+        {
+            super.processMouseEvent(e); // Process the event
+        }
+        else
+        {
+            super.processMouseEvent(e); // Process other mouse events normally
+        }
+    }
+
+    public void rotate(double degrees)
+    {
+        if (!locked)
+        {
+            angle += Math.toRadians(degrees); // Increment the angle by 90 degrees
+            normalizeAngle();
+            repaint();
+        }
+    }
+
+    public void rotateReverse(double degrees)
+    {
+        if (!locked)
+        {
+            angle -= Math.toRadians(degrees); // Decrement the angle by the specified degrees
+            normalizeAngle();
+            repaint(); // Repaint the button to reflect the rotation
+        }
+    }
+
+    private void normalizeAngle() {
+        // Normalize the angle to stay within 0-360 degrees
+        angle = angle % (2 * Math.PI); // Use modulo to keep the angle within 0-360 degrees
+        if (angle < 0) {
+            angle += 2 * Math.PI; // Ensure the angle is positive
+        }
+    }
+
+    private void toggleLockedState()
+    {
+        locked = !locked; // Toggle the locked state
+        repaint(); // Repaint the button to reflect the change
+    }
+
+    @Override
+    protected void paintComponent(Graphics g)
+    {
+        Graphics2D g2d = (Graphics2D) g.create();
+
+        if (locked) {
+            g2d.setColor(new Color(0, 0, 0, 100)); // Semi-transparent black overlay
+            g2d.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        // Apply rotation transformation
+        g2d.rotate(angle, getWidth() / 2.0, getHeight() / 2.0);
+
+        // Paint the button
+        super.paintComponent(g2d);
+
+        g2d.dispose();
+    }
+
+    private ImageIcon scaleIcon(ImageIcon icon, int width, int height)
+    {
+        Image image = icon.getImage(); // Get the image from the icon
+        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH); // Scale the image
+        return new ImageIcon(scaledImage); // Return the scaled image as an ImageIcon
+    }
+}
