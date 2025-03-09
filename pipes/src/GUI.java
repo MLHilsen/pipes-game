@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 public class GUI
@@ -40,11 +42,23 @@ public class GUI
 
     
                 // Add action listener to update the button's label on click
-                button.addActionListener(e -> {
-                    button.rotate(); // Rotate the button by 90 degrees
+                button.addActionListener(e ->
+                {
+                    button.rotate(90); // Rotate the button by 90 degrees
                     button.repaint(); // Repaint the button to reflect the rotation
                 });
 
+                button.addMouseListener(new MouseAdapter()
+                {
+                    @Override
+                    public void mouseClicked(MouseEvent e)
+                    {
+                        if (SwingUtilities.isRightMouseButton(e))
+                        {
+                            button.rotateReverse(90); // Rotate the button by 90 degrees counterclockwise
+                        }
+                    }
+                });
     
                 // Add the button to the grid panel
                 gridPanel.add(button);
@@ -59,11 +73,13 @@ public class GUI
     }
 }
 
-class RotatedButton extends JButton {
+class RotatedButton extends JButton
+{
     private double angle = 0; // Current rotation angle in radians
     private final ImageIcon icon;
 
-    public RotatedButton(ImageIcon originalIcon) {
+    public RotatedButton(ImageIcon originalIcon)
+    {
         // Scale the image to fit the button size
         this.icon = scaleIcon(originalIcon, 80, 80); // Replace 80 with your button size
         setIcon(this.icon); // Set the scaled icon
@@ -71,17 +87,49 @@ class RotatedButton extends JButton {
         setContentAreaFilled(false); // Make the button background transparent
         setBorderPainted(false); // Remove the border
         setFocusPainted(false); // Remove the focus border
+
+        setFocusable(false);
     }
 
-    public void rotate() {
-        angle += Math.toRadians(90); // Increment the angle by 90 degrees
-        if (angle >= Math.toRadians(360)) {
-            angle = 0; // Reset the angle after a full rotation
+    @Override
+    protected void processMouseEvent(MouseEvent e)
+    {
+        // Allow right-clicks to be processed without gaining focus
+        if (SwingUtilities.isRightMouseButton(e))
+        {
+            super.processMouseEvent(e); // Process the event
+        }
+        else
+        {
+            super.processMouseEvent(e); // Process other mouse events normally
+        }
+    }
+
+    public void rotate(double degrees)
+    {
+        angle += Math.toRadians(degrees); // Increment the angle by 90 degrees
+        normalizeAngle();
+        repaint();
+    }
+
+    public void rotateReverse(double degrees)
+    {
+        angle -= Math.toRadians(degrees); // Decrement the angle by the specified degrees
+        normalizeAngle();
+        repaint(); // Repaint the button to reflect the rotation
+    }
+
+    private void normalizeAngle() {
+        // Normalize the angle to stay within 0-360 degrees
+        angle = angle % (2 * Math.PI); // Use modulo to keep the angle within 0-360 degrees
+        if (angle < 0) {
+            angle += 2 * Math.PI; // Ensure the angle is positive
         }
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g)
+    {
         Graphics2D g2d = (Graphics2D) g.create();
 
         // Apply rotation transformation
@@ -93,7 +141,8 @@ class RotatedButton extends JButton {
         g2d.dispose();
     }
 
-    private ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
+    private ImageIcon scaleIcon(ImageIcon icon, int width, int height)
+    {
         Image image = icon.getImage(); // Get the image from the icon
         Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH); // Scale the image
         return new ImageIcon(scaledImage); // Return the scaled image as an ImageIcon
