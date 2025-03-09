@@ -85,11 +85,6 @@ public class Cell {
 
     public boolean isCorrectlyRotated()
     {
-        System.out.println("Checking cell at (" + coords[0] + ", " + coords[1] + "):");
-        System.out.println("Segment: " + segment);
-        System.out.println("Rotation: " + rotation);
-        System.out.println("Walls: Top=" + hasTopWall + ", Bottom=" + hasBottomWall + ", Left=" + hasLeftWall + ", Right=" + hasRightWall);
-
         switch (segment) {
             case Straight -> {
                 if (hasBottomWall && hasTopWall && !hasLeftWall && !hasRightWall) // If horizontal straight
@@ -99,6 +94,63 @@ public class Cell {
                 if (!hasBottomWall && !hasTopWall && hasLeftWall && hasRightWall) // If vertical straight
                 {
                     if (this.rotation == 0 || this.rotation == 180) {return true;}
+                }
+            }
+
+            case Fork -> {
+                if (!hasBottomWall && !hasTopWall && !hasLeftWall && hasRightWall)
+                {
+                    if (this.rotation == 0) {return true;}
+                }
+                if (hasBottomWall && !hasTopWall && !hasLeftWall && !hasRightWall)
+                {
+                    if (this.rotation == 90) {return true;}
+                }
+                if (!hasBottomWall && !hasTopWall && hasLeftWall && !hasRightWall)
+                {
+                    if (this.rotation == 180) {return true;}
+                }
+                if (!hasBottomWall && hasTopWall && !hasLeftWall && !hasRightWall)
+                {
+                    if (this.rotation == 270) {return true;}
+                }
+            }
+            
+            case End -> {
+                if (hasBottomWall && hasTopWall && !hasLeftWall && hasRightWall)
+                {
+                    if (this.rotation == 0) {return true;}
+                }
+                if (hasBottomWall && !hasTopWall && hasLeftWall && hasRightWall)
+                {
+                    if (this.rotation == 90) {return true;}
+                }
+                if (hasBottomWall && hasTopWall && hasLeftWall && !hasRightWall)
+                {
+                    if (this.rotation == 180) {return true;}
+                }
+                if (!hasBottomWall && hasTopWall && hasLeftWall && hasRightWall)
+                {
+                    if (this.rotation == 270) {return true;}
+                }
+            }
+            
+            case Corner -> {
+                if (hasBottomWall && !hasTopWall && !hasLeftWall && hasRightWall)
+                {
+                    if (this.rotation == 0) {return true;}
+                }
+                if (hasBottomWall && !hasTopWall && hasLeftWall && !hasRightWall)
+                {
+                    if (this.rotation == 90) {return true;}
+                }
+                if (!hasBottomWall && hasTopWall && hasLeftWall && !hasRightWall)
+                {
+                    if (this.rotation == 180) {return true;}
+                }
+                if (!hasBottomWall && hasTopWall && !hasLeftWall && hasRightWall)
+                {
+                    if (this.rotation == 270) {return true;}
                 }
             }
                 

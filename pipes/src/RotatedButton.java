@@ -99,7 +99,6 @@ public class RotatedButton extends JButton
             normalizeAngle();
             cell.rotate((int) degrees);
             repaint();
-            System.out.println(cell.getRotation()); // (HERE)
         }
     }
 
@@ -111,7 +110,6 @@ public class RotatedButton extends JButton
             normalizeAngle();
             cell.rotate(-(int) degrees); 
             repaint(); // Repaint the button to reflect the rotation
-            System.out.println(cell.getRotation()); // (HERE)
         }
     }
 
