@@ -60,8 +60,7 @@ public class RotatedButton extends JButton
                     Component component = SwingUtilities.getDeepestComponentAt(
                             getParent(), e.getX() + getX(), e.getY() + getY());
 
-                    if (component instanceof RotatedButton) {
-                        RotatedButton button = (RotatedButton) component;
+                    if (component instanceof RotatedButton button) {
                         if (isLockingOperation && !button.isLocked()) {
                             button.setLocked(true); // Lock the cell
                         } else if (!isLockingOperation && button.isLocked()) {

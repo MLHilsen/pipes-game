@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
 import javax.swing.*;
 
 public class GUI
@@ -63,6 +64,7 @@ public class GUI
     
                 // Add the button to the grid panel
                 gridPanel.add(button);
+                randomlyRotateButton(button);
             }
         }
     
@@ -82,6 +84,15 @@ public class GUI
     
         // Make the frame visible
         frame.setVisible(true);
+    }
+
+    public void randomlyRotateButton(RotatedButton button)
+    {
+        Random random = new Random();
+        // Generate a random multiple of 90 (0, 90, 180, or 270)
+        int rotation = random.nextInt(4) * 90;
+        // Apply the rotation to the cell
+        button.rotate(rotation);
     }
 }
 
