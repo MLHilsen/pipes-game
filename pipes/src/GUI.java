@@ -9,8 +9,6 @@ public class GUI
     {
         JFrame frame = new JFrame("Pipes Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 500);
-
 
         // Create a panel with GridLayout to hold the grid of cells
         JPanel gridPanel = new JPanel();
@@ -22,7 +20,27 @@ public class GUI
         ImageIcon corner = new ImageIcon("src/imgs/Corner.png");
         ImageIcon end = new ImageIcon("src/imgs/End.png");
 
-        int buttonSize = 80;
+        // Get Screen Size
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = screenSize.width;
+        int screenHeight = screenSize.height;
+
+        // Calculate maximum button size based on screen dimensions and grid size
+        double maxButtonWidth = (screenWidth * 0.8) / grid.dimensions;
+        double maxButtonHeight = (screenHeight * 0.8) / grid.dimensions;
+        int buttonSize = (int) Math.min(maxButtonWidth, maxButtonHeight); // Use the smaller value to ensure the grid fits
+
+        int totalWidth = grid.dimensions * buttonSize;
+        int totalHeight = grid.dimensions * buttonSize;
+
+        int decorationWidth = frame.getInsets().left + frame.getInsets().right; // Adjust based decoration needs
+        int decorationHeight = frame.getInsets().top + frame.getInsets().bottom; // Adjust based decoration needs
+
+        totalWidth += decorationWidth;
+        totalHeight += decorationHeight;
+
+        // Set the preferred size of the grid panel
+        gridPanel.setPreferredSize(new Dimension(totalWidth - decorationWidth, totalHeight - decorationHeight));
 
         // Add buttons to the grid panel corresponding to the grid
         for (int i = 0; i < grid.dimensions; i++)
@@ -34,10 +52,10 @@ public class GUI
 
                 RotatedButton button;
                 switch (segment) {
-                    case Straight -> {button = new RotatedButton(straight, cell);}
-                    case Fork -> {button = new RotatedButton(fork, cell);}
-                    case Corner -> {button = new RotatedButton(corner, cell);}
-                    case End -> {button = new RotatedButton(end, cell);}
+                    case Straight -> {button = new RotatedButton(straight, cell, buttonSize);}
+                    case Fork -> {button = new RotatedButton(fork, cell, buttonSize);}
+                    case Corner -> {button = new RotatedButton(corner, cell, buttonSize);}
+                    case End -> {button = new RotatedButton(end, cell, buttonSize);}
                     default -> throw new AssertionError();
                 }
                 
@@ -73,9 +91,17 @@ public class GUI
         JButton verifyButton = new JButton("Verify Rotations");
         verifyButton.addActionListener(e -> {
             boolean isValid = grid.verifyRotations();
-            if (isValid) {
-                JOptionPane.showMessageDialog(frame, "All rotations are correct!");
-            } else {
+            boolean isComplete = grid.isComplete();
+
+            if (isValid && isComplete)
+            {
+                JOptionPane.showMessageDialog(frame, "Puzzle complete!");
+            }
+            else if (isValid)
+            {
+                JOptionPane.showMessageDialog(frame, "So far so good!");
+            } else
+            {
                 JOptionPane.showMessageDialog(frame, "Some rotations are incorrect.");
             }
         });
@@ -85,14 +111,7 @@ public class GUI
         frame.add(verifyButton, BorderLayout.SOUTH);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-
-        int totalWidth = grid.dimensions * buttonSize;
-        int totalHeight = grid.dimensions * buttonSize;
-
-        int decorationWidth = 0; // Adjust based decoration needs
-        int decorationHeight = 0; // Adjust based decoration needs
-        totalWidth += decorationWidth;
-        totalHeight += decorationHeight;
+        frame.setResizable(false); 
 
         frame.setSize(totalWidth, totalHeight);
         frame.setLocationRelativeTo(null);

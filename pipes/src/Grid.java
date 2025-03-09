@@ -23,7 +23,8 @@ public class Grid
         }
     }
 
-    public boolean verifyRotations() {
+    public boolean verifyRotations()
+    {
         for (int i = 0; i < dimensions; i++) {
             for (int j = 0; j < dimensions; j++) {
                 Cell cell = grid[i][j];
@@ -31,6 +32,19 @@ public class Grid
                 if (cell.isLocked() && !cell.isCorrectlyRotated()) {return false;} // Check if cell is locked and correctly rotated
             }
         }
+        return true;
+    }
+
+    public boolean isComplete()
+    {
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                Cell cell = grid[i][j];
+
+                if (!cell.isLocked()) {return false;} // Check if cell is locked
+            }
+        }
+
         return true;
     }
 

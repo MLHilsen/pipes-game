@@ -12,11 +12,11 @@ public class RotatedButton extends JButton
     private static boolean isLockingOperation = false;
     private final Cell cell;
 
-    public RotatedButton(ImageIcon originalIcon, Cell cell)
+    public RotatedButton(ImageIcon originalIcon, Cell cell, int buttonSize)
     {
         // Scale the image to fit the button size
         this.cell = cell;
-        this.icon = scaleIcon(originalIcon, 80, 80); // Replace 80 with your button size
+        this.icon = scaleIcon(originalIcon, buttonSize, buttonSize); // Replace 80 with your button size
         setIcon(this.icon); // Set the scaled icon
 
         setContentAreaFilled(false); // Make the button background transparent
@@ -27,7 +27,6 @@ public class RotatedButton extends JButton
         holdTimer = new Timer(250, e -> {
             isLockingOperation = !locked; // Set the operation type based on the initial cell's state
             setLocked(!locked);
-            cell.setLocked(locked); // THIS LINE MIGHT NOT BE NECISSARY (HERE)
         });
         holdTimer.setRepeats(false); // Ensure the timer only fires once
 
@@ -66,10 +65,8 @@ public class RotatedButton extends JButton
                     if (component instanceof RotatedButton button) {
                         if (isLockingOperation && !button.isLocked()) {
                             button.setLocked(true); // Lock the cell
-                            cell.setLocked(true);
                         } else if (!isLockingOperation && button.isLocked()) {
                             button.setLocked(false); // Unlock the cell
-                            cell.setLocked(false);
                         }
                     }
                 }
@@ -124,6 +121,7 @@ public class RotatedButton extends JButton
     public void setLocked(boolean locked)
     {
         this.locked = locked;
+        cell.setLocked(locked);
         repaint();
     }
 
@@ -137,7 +135,7 @@ public class RotatedButton extends JButton
         Graphics2D g2d = (Graphics2D) g.create();
 
         if (locked) {
-            g2d.setColor(new Color(0, 0, 0, 100)); // Semi-transparent black overlay
+            g2d.setColor(new Color(0, 0, 0, 50)); // Semi-transparent black overlay
             g2d.fillRect(0, 0, getWidth(), getHeight());
         }
 
