@@ -101,6 +101,102 @@ public class Cell {
         this.locked = locked;
     }
 
+    public boolean hasTopWallAtRotation(int rotation) {
+        switch (rotation) {
+            case 0 -> {return hasTopWall;}
+            case 90 -> {return hasRightWall;}
+            case 180 -> {return hasBottomWall;}
+            case 270 -> {return hasLeftWall;}
+            default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
+        }
+    }
+    
+    public boolean hasBottomWallAtRotation(int rotation) {
+        switch (rotation) {
+            case 0 -> {return hasBottomWall;}
+            case 90 -> {return hasLeftWall;}
+            case 180 -> {return hasTopWall;}
+            case 270 -> {return hasRightWall;}
+            default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
+        }
+    }
+    
+    public boolean hasLeftWallAtRotation(int rotation) {
+        switch (rotation) {
+            case 0 -> {return hasLeftWall;}
+            case 90 -> {return hasTopWall;}
+            case 180 -> {return hasRightWall;}
+            case 270 -> {return hasBottomWall;}
+            default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
+        }
+    }
+    
+    public boolean hasRightWallAtRotation(int rotation) {
+        switch (rotation) {
+            case 0 -> {return hasRightWall;}
+            case 90 -> {return hasBottomWall;}
+            case 180 -> {return hasLeftWall;}
+            case 270 -> {return hasTopWall;}
+            default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
+        }
+    }
+
+    private boolean neighborsLink(Cell current, Cell neighbor) {
+        int currentRotation = current.getRotation();
+        int neighborRotation = neighbor.getRotation();
+    
+        // Determine the relative positions of the cells
+        int dx = neighbor.coords[0] - current.coords[0]; // Row difference
+        int dy = neighbor.coords[1] - current.coords[1]; // Column difference
+    
+        // Check if the cells are adjacent
+        if (Math.abs(dx) + Math.abs(dy) != 1) {
+            return false; // Cells are not adjacent
+        }
+    
+        // Determine which walls to check based on the relative positions
+        if (dx == -1) { // Neighbor is above
+            // Check if the current cell's top wall and the neighbor's bottom wall are open
+            return !current.hasTopWallAtRotation(currentRotation) && !neighbor.hasBottomWallAtRotation(neighborRotation);
+        } else if (dx == 1) { // Neighbor is below
+            // Check if the current cell's bottom wall and the neighbor's top wall are open
+            return !current.hasBottomWallAtRotation(currentRotation) && !neighbor.hasTopWallAtRotation(neighborRotation);
+        } else if (dy == -1) { // Neighbor is to the left
+            // Check if the current cell's left wall and the neighbor's right wall are open
+            return !current.hasLeftWallAtRotation(currentRotation) && !neighbor.hasRightWallAtRotation(neighborRotation);
+        } else if (dy == 1) { // Neighbor is to the right
+            // Check if the current cell's right wall and the neighbor's left wall are open
+            return !current.hasRightWallAtRotation(currentRotation) && !neighbor.hasLeftWallAtRotation(neighborRotation);
+        }
+    
+        return false;
+    }
+
+    public boolean hasExposedWallToFilledNeighbor(Grid grid)
+    {
+        int i = coords[0];
+        int j = coords[1];
+    
+        // Check Up
+        if (i - 1 >= 0 && grid.grid[i - 1][j].isFilled() && neighborsLink(this, grid.grid[i - 1][j])) {
+            return true;
+        }
+        // Check Down
+        else if (i + 1 < grid.dimensions && grid.grid[i + 1][j].isFilled() && neighborsLink(this, grid.grid[i + 1][j])) {
+            return true;
+        }
+        // Check Left
+        else if (j - 1 >= 0 && grid.grid[i][j - 1].isFilled() && neighborsLink(this, grid.grid[i][j - 1])) {
+            return true;
+        }
+        // Check Right
+        else if (j + 1 < grid.dimensions && grid.grid[i][j + 1].isFilled() && neighborsLink(this, grid.grid[i][j + 1])) {
+            return true;
+        }
+    
+        return false;
+    }
+
     public boolean isCorrectlyRotated()
     {
         switch (segment) {

@@ -20,11 +20,6 @@ public class GUI
         ImageIcon corner = new ImageIcon("src/imgs/Corner.png");
         ImageIcon end = new ImageIcon("src/imgs/End.png");
 
-        ImageIcon straight_filled = new ImageIcon("src/imgs/Straight_Filled.png");
-        ImageIcon fork_filled = new ImageIcon("src/imgs/Fork_Filled.png");
-        ImageIcon corner_filled = new ImageIcon("src/imgs/Corner_Filled.png");
-        ImageIcon end_filled = new ImageIcon("src/imgs/End_Filled.png");
-
         ImageIcon straight_source = new ImageIcon("src/imgs/Straight_Source.png");
         ImageIcon fork_source = new ImageIcon("src/imgs/Fork_Source.png");
         ImageIcon corner_source = new ImageIcon("src/imgs/Corner_Source.png");

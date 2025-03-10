@@ -13,6 +13,7 @@ public class RotatedButton extends JButton
     private final Cell cell;
     private final Grid grid;
     private final Runnable onGridComplete;
+    private final int buttonSize;
 
     public RotatedButton(ImageIcon originalIcon, Cell cell, int buttonSize, Grid grid, Runnable onGridComplete)
     {
@@ -20,6 +21,7 @@ public class RotatedButton extends JButton
         this.cell = cell;
         this.grid = grid;
         this.onGridComplete = onGridComplete;
+        this.buttonSize = buttonSize;
 
         this.icon = scaleIcon(originalIcon, buttonSize, buttonSize); // Replace 80 with your button size
         setIcon(this.icon); // Set the scaled icon
@@ -101,6 +103,11 @@ public class RotatedButton extends JButton
             normalizeAngle();
             cell.rotate((int) degrees);
             repaint();
+
+            if (cell.hasExposedWallToFilledNeighbor(grid)) {
+                cell.setFilled(true);
+                updateIcon(true); // Update the icon to the filled version
+            }
         }
     }
 
@@ -112,6 +119,11 @@ public class RotatedButton extends JButton
             normalizeAngle();
             cell.rotate(-(int) degrees); 
             repaint(); // Repaint the button to reflect the rotation
+
+            if (cell.hasExposedWallToFilledNeighbor(grid)) {
+                cell.setFilled(true);
+                updateIcon(true); // Update the icon to the filled version
+            }
         }
     }
 
@@ -143,6 +155,19 @@ public class RotatedButton extends JButton
 
     public boolean isLocked(){
         return locked;
+    }
+
+    private void updateIcon(boolean filled)
+    {
+        ImageIcon newIcon;
+        switch (cell.getSegment()) {
+            case Straight -> newIcon = filled ? new ImageIcon("src/imgs/Straight_Filled.png") : new ImageIcon("src/imgs/Straight.png");
+            case Fork -> newIcon = filled ? new ImageIcon("src/imgs/Fork_Filled.png") : new ImageIcon("src/imgs/Fork.png");
+            case Corner -> newIcon = filled ? new ImageIcon("src/imgs/Corner_Filled.png") : new ImageIcon("src/imgs/Corner.png");
+            case End -> newIcon = filled ? new ImageIcon("src/imgs/End_Filled.png") : new ImageIcon("src/imgs/End.png");
+            default -> throw new AssertionError();
+        }
+        setIcon(scaleIcon(newIcon, buttonSize, buttonSize));
     }
 
     @Override
