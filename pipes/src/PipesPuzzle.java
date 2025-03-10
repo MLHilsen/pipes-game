@@ -8,8 +8,12 @@ public class PipesPuzzle
         {
             try
             {
-                grid.createGrid(4);
+                grid.createGrid(16);
                 grid.breakWalls();
+
+                GUI gui = new GUI();
+                gui.createGUI(grid);
+                
                 break;
             }
             catch (NullPointerException e)
@@ -17,8 +21,5 @@ public class PipesPuzzle
                 System.err.println("Retrying Map Generation...");
             }
         }
-
-        GUI gui = new GUI();
-        gui.createGUI(grid);
     }
 }
