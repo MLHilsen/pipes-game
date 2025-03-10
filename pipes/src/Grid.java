@@ -10,6 +10,7 @@ public class Grid
     
     public void createGrid(int dimensions)
     {
+        Random random = new Random();
         this.dimensions = dimensions;
         this.grid = new Cell[dimensions][dimensions];
         
@@ -21,6 +22,14 @@ public class Grid
                 grid[i][j].setCoords(i, j);
             }
         }
+
+        // Set Water Source
+        int i = random.nextInt(dimensions);
+        int j = random.nextInt(dimensions);
+        grid[i][j].setSource(true);
+        grid[i][j].setFilled(true);
+
+        breakWalls(random);
     }
 
     public boolean verifyRotations()
@@ -106,9 +115,8 @@ public class Grid
         }        
     }
 
-    public void breakWalls()
+    public void breakWalls(Random random)
     {
-        Random random = new Random();
         _breakWalls_r(random, random.nextInt(dimensions), random.nextInt(dimensions));
         setCellSegments();
     }

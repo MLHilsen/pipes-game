@@ -3,17 +3,14 @@ public class PipesPuzzle
     public static void main(String[] args) throws Exception
     {
         Grid grid = new Grid();
+        GUI gui = new GUI();
 
         while (true)
         {
             try
             {
                 grid.createGrid(16);
-                grid.breakWalls();
-
-                GUI gui = new GUI();
                 gui.createGUI(grid);
-                
                 break;
             }
             catch (NullPointerException e)

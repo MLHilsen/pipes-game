@@ -8,6 +8,8 @@ public class Cell {
     public int[] coords = new int[2];
     public int rotation = 0;
     public boolean locked = false;
+    public boolean isSource = false;
+    public boolean isFilled = false;
     
     public enum Segment
     {
@@ -45,6 +47,22 @@ public class Cell {
     {
         coords[0] = i;
         coords[1] = j;
+    }
+
+    public boolean isSource() {
+        return isSource;
+    }
+
+    public void setSource(boolean isSource) {
+        this.isSource = isSource;
+    }
+
+    public boolean isFilled() {
+        return isFilled;
+    }
+
+    public void setFilled(boolean isFilled) {
+        this.isFilled = isFilled;
     }
 
     public void visit()

@@ -20,6 +20,16 @@ public class GUI
         ImageIcon corner = new ImageIcon("src/imgs/Corner.png");
         ImageIcon end = new ImageIcon("src/imgs/End.png");
 
+        ImageIcon straight_filled = new ImageIcon("src/imgs/Straight_Filled.png");
+        ImageIcon fork_filled = new ImageIcon("src/imgs/Fork_Filled.png");
+        ImageIcon corner_filled = new ImageIcon("src/imgs/Corner_Filled.png");
+        ImageIcon end_filled = new ImageIcon("src/imgs/End_Filled.png");
+
+        ImageIcon straight_source = new ImageIcon("src/imgs/Straight_Source.png");
+        ImageIcon fork_source = new ImageIcon("src/imgs/Fork_Source.png");
+        ImageIcon corner_source = new ImageIcon("src/imgs/Corner_Source.png");
+        ImageIcon end_source = new ImageIcon("src/imgs/End_Source.png");
+
         // Get Screen Size
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenWidth = screenSize.width;
@@ -52,10 +62,22 @@ public class GUI
 
                 RotatedButton button;
                 switch (segment) {
-                    case Straight -> {button = new RotatedButton(straight, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
-                    case Fork -> {button = new RotatedButton(fork, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
-                    case Corner -> {button = new RotatedButton(corner, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
-                    case End -> {button = new RotatedButton(end, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                    case Straight -> {
+                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(straight_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                        else {button = new RotatedButton(straight, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                    }
+                    case Fork -> {
+                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(fork_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                        else {button = new RotatedButton(fork, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                    }
+                    case Corner -> {
+                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(corner_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                        else {button = new RotatedButton(corner, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                    }
+                    case End -> {
+                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(end_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                        else {button = new RotatedButton(end, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                    }
                     default -> throw new AssertionError();
                 }
                 
