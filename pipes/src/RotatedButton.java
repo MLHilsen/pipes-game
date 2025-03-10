@@ -104,7 +104,7 @@ public class RotatedButton extends JButton
             cell.rotate((int) degrees);
             repaint();
 
-            if (cell.hasExposedWallToFilledNeighbor(grid)) {
+            if (cell.hasExposedWallToFilledNeighbor(grid) && !cell.isSource()) {
                 cell.setFilled(true);
                 updateIcon(true); // Update the icon to the filled version
             }
@@ -120,7 +120,7 @@ public class RotatedButton extends JButton
             cell.rotate(-(int) degrees); 
             repaint(); // Repaint the button to reflect the rotation
 
-            if (cell.hasExposedWallToFilledNeighbor(grid)) {
+            if (cell.hasExposedWallToFilledNeighbor(grid) && !cell.isSource()) {
                 cell.setFilled(true);
                 updateIcon(true); // Update the icon to the filled version
             }

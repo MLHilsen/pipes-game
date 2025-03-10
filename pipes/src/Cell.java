@@ -86,6 +86,7 @@ public class Cell {
         if (this.rotation < 0) {
             this.rotation += 360; // Ensure rotation is positive
         }
+        System.out.println(this.rotation); // Debug
     }
 
     public int getRotation()
@@ -102,43 +103,51 @@ public class Cell {
     }
 
     public boolean hasTopWallAtRotation(int rotation) {
-        switch (rotation) {
-            case 0 -> {return hasTopWall;}
-            case 90 -> {return hasRightWall;}
-            case 180 -> {return hasBottomWall;}
-            case 270 -> {return hasLeftWall;}
+        switch (segment) {
+            case Straight -> {if (rotation == 90 || rotation == 270) {return true;}}
+            case Fork -> {if (rotation == 270) {return true;};}
+            case Corner -> {if (rotation == 180 || rotation == 270) {return true;};}
+            case End -> {if (rotation == 0 || rotation == 180 || rotation == 270) {return true;};}
             default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
         }
+
+        return false;
     }
     
     public boolean hasBottomWallAtRotation(int rotation) {
-        switch (rotation) {
-            case 0 -> {return hasBottomWall;}
-            case 90 -> {return hasLeftWall;}
-            case 180 -> {return hasTopWall;}
-            case 270 -> {return hasRightWall;}
+        switch (segment) {
+            case Straight -> {if (rotation == 90 || rotation == 270) {return true;}}
+            case Fork -> {if (rotation == 90) {return true;};}
+            case Corner -> {if (rotation == 0 || rotation == 90) {return true;};}
+            case End -> {if (rotation == 0 || rotation == 90 || rotation == 180) {return true;};}
             default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
         }
+
+        return false;
     }
     
     public boolean hasLeftWallAtRotation(int rotation) {
-        switch (rotation) {
-            case 0 -> {return hasLeftWall;}
-            case 90 -> {return hasTopWall;}
-            case 180 -> {return hasRightWall;}
-            case 270 -> {return hasBottomWall;}
+        switch (segment) {
+            case Straight -> {if (rotation == 0 || rotation == 180) {return true;}}
+            case Fork -> {if (rotation == 180) {return true;};}
+            case Corner -> {if (rotation == 90 || rotation == 180) {return true;};}
+            case End -> {if (rotation == 90 || rotation == 180 || rotation == 270) {return true;};}
             default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
         }
+
+        return false;
     }
     
     public boolean hasRightWallAtRotation(int rotation) {
-        switch (rotation) {
-            case 0 -> {return hasRightWall;}
-            case 90 -> {return hasBottomWall;}
-            case 180 -> {return hasLeftWall;}
-            case 270 -> {return hasTopWall;}
+        switch (segment) {
+            case Straight -> {if (rotation == 0 || rotation == 180) {return true;}}
+            case Fork -> {if (rotation == 0) {return true;};}
+            case Corner -> {if (rotation == 0 || rotation == 270) {return true;};}
+            case End -> {if (rotation == 0 || rotation == 90 || rotation == 270) {return true;};}
             default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
         }
+
+        return false;
     }
 
     private boolean neighborsLink(Cell current, Cell neighbor) {
