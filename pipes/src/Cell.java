@@ -105,9 +105,9 @@ public class Cell {
     public boolean hasTopWallAtRotation(int rotation) {
         switch (segment) {
             case Straight -> {if (rotation == 90 || rotation == 270) {return true;}}
-            case Fork -> {if (rotation == 270) {return true;};}
-            case Corner -> {if (rotation == 180 || rotation == 270) {return true;};}
-            case End -> {if (rotation == 0 || rotation == 180 || rotation == 270) {return true;};}
+            case Fork -> {if (rotation == 270) {return true;}}
+            case Corner -> {if (rotation == 180 || rotation == 270) {return true;}}
+            case End -> {if (rotation == 0 || rotation == 180 || rotation == 270) {return true;}}
             default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
         }
 
@@ -117,9 +117,9 @@ public class Cell {
     public boolean hasBottomWallAtRotation(int rotation) {
         switch (segment) {
             case Straight -> {if (rotation == 90 || rotation == 270) {return true;}}
-            case Fork -> {if (rotation == 90) {return true;};}
-            case Corner -> {if (rotation == 0 || rotation == 90) {return true;};}
-            case End -> {if (rotation == 0 || rotation == 90 || rotation == 180) {return true;};}
+            case Fork -> {if (rotation == 90) {return true;}}
+            case Corner -> {if (rotation == 0 || rotation == 90) {return true;}}
+            case End -> {if (rotation == 0 || rotation == 90 || rotation == 180) {return true;}}
             default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
         }
 
@@ -129,9 +129,9 @@ public class Cell {
     public boolean hasLeftWallAtRotation(int rotation) {
         switch (segment) {
             case Straight -> {if (rotation == 0 || rotation == 180) {return true;}}
-            case Fork -> {if (rotation == 180) {return true;};}
-            case Corner -> {if (rotation == 90 || rotation == 180) {return true;};}
-            case End -> {if (rotation == 90 || rotation == 180 || rotation == 270) {return true;};}
+            case Fork -> {if (rotation == 180) {return true;}}
+            case Corner -> {if (rotation == 90 || rotation == 180) {return true;}}
+            case End -> {if (rotation == 90 || rotation == 180 || rotation == 270) {return true;}}
             default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
         }
 
@@ -141,9 +141,9 @@ public class Cell {
     public boolean hasRightWallAtRotation(int rotation) {
         switch (segment) {
             case Straight -> {if (rotation == 0 || rotation == 180) {return true;}}
-            case Fork -> {if (rotation == 0) {return true;};}
-            case Corner -> {if (rotation == 0 || rotation == 270) {return true;};}
-            case End -> {if (rotation == 0 || rotation == 90 || rotation == 270) {return true;};}
+            case Fork -> {if (rotation == 0) {return true;}}
+            case Corner -> {if (rotation == 0 || rotation == 270) {return true;}}
+            case End -> {if (rotation == 0 || rotation == 90 || rotation == 270) {return true;}}
             default -> throw new IllegalArgumentException("Invalid rotation: " + rotation);
         }
 
