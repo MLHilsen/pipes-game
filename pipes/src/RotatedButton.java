@@ -97,25 +97,14 @@ public class RotatedButton extends JButton
         }
     }
 
-    public void rotate(double degrees)
-    {
-        if (!locked)
-        {
+    public void rotate(double degrees) {
+        if (!locked) {
             angle += Math.toRadians(degrees); // Increment the angle by 90 degrees
             normalizeAngle();
             cell.rotate((int) degrees);
             repaint();
 
-            if (cell.hasExposedWallToFilledNeighbor(grid, cell) && !cell.isSource()) {
-                cell.setFilled(true);
-                grid.floodNeighbors_r(cell, gui);
-                updateIcon(true); // Update the icon to the filled version
-            }
-            if (cell.isFilled())
-            {
-                grid.floodNeighbors_r(cell, gui);
-                updateIcon(true);
-            }
+            grid.revalidateFlooding(gui);
         }
     }
 
@@ -128,16 +117,7 @@ public class RotatedButton extends JButton
             cell.rotate(-(int) degrees); 
             repaint(); // Repaint the button to reflect the rotation
 
-            if (cell.hasExposedWallToFilledNeighbor(grid, cell) && !cell.isSource()) {
-                cell.setFilled(true);
-                grid.floodNeighbors_r(cell, gui);
-                updateIcon(true); // Update the icon to the filled version
-            }
-            if (cell.isFilled())
-            {
-                grid.floodNeighbors_r(cell, gui);
-                updateIcon(true);
-            }
+            grid.revalidateFlooding(gui);
         }
     }
 

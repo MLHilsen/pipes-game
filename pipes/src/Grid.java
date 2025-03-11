@@ -57,13 +57,51 @@ public class Grid
         return true;
     }
 
+    public void drainCells(GUI gui) {
+        // Create a copy of the grid to track changes
+        boolean[][] wasFilled = new boolean[dimensions][dimensions];
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                wasFilled[i][j] = grid[i][j].isFilled();
+            }
+        }
+    
+        // Drain cells that no longer touch a flooded cell
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                Cell cell = grid[i][j];
+                if (cell.isFilled() && !cell.isSource()) {
+                    // Check if the cell still touches a flooded cell
+                    boolean shouldDrain = true;
+                    if (i - 1 >= 0 && wasFilled[i - 1][j] && cell.neighborsLink(cell, grid[i - 1][j])) {
+                        shouldDrain = false; // Connected to a flooded cell above
+                    }
+                    if (i + 1 < dimensions && wasFilled[i + 1][j] && cell.neighborsLink(cell, grid[i + 1][j])) {
+                        shouldDrain = false; // Connected to a flooded cell below
+                    }
+                    if (j - 1 >= 0 && wasFilled[i][j - 1] && cell.neighborsLink(cell, grid[i][j - 1])) {
+                        shouldDrain = false; // Connected to a flooded cell to the left
+                    }
+                    if (j + 1 < dimensions && wasFilled[i][j + 1] && cell.neighborsLink(cell, grid[i][j + 1])) {
+                        shouldDrain = false; // Connected to a flooded cell to the right
+                    }
+    
+                    if (shouldDrain) {
+                        cell.setFilled(false); // Drain the cell
+                        updateButtonIcon(cell, gui); // Update the button icon
+                    }
+                }
+            }
+        }
+    }
+
     public void floodNeighbors_r(Cell cell, GUI gui) {
         /* 
-            * Get a list of all immediate neighbors
-            * Check if walls connect with flooded cell
-            * If do, flood and add THAT cell's neighbors to list
-            * Repeat until list is empty
-            */
+        * Get a list of all immediate neighbors
+        * Check if walls connect with flooded cell
+        * If do, flood and add THAT cell's neighbors to list
+        * Repeat until list is empty
+        */
         // Get the coordinates of the current cell
         int i = cell.coords[0];
         int j = cell.coords[1];
@@ -103,6 +141,29 @@ public class Grid
                 neighbor.setFilled(true);
                 updateButtonIcon(neighbor, gui);
                 floodNeighbors_r(neighbor, gui); // Recursively flood the neighbor
+            }
+        }
+    }
+
+    public void revalidateFlooding(GUI gui) {
+        // Clear the flooded state of all cells (except the source)
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                Cell cell = grid[i][j];
+                if (!cell.isSource()) {
+                    cell.setFilled(false);
+                    updateButtonIcon(cell, gui); // Update the button icon
+                }
+            }
+        }
+    
+        // Re-flood the grid starting from the source
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                Cell cell = grid[i][j];
+                if (cell.isSource()) {
+                    floodNeighbors_r(cell, gui); // Flood from the source
+                }
             }
         }
     }
