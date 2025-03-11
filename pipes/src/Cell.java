@@ -86,7 +86,6 @@ public class Cell {
         if (this.rotation < 0) {
             this.rotation += 360; // Ensure rotation is positive
         }
-        System.out.println(this.rotation); // Debug
     }
 
     public int getRotation()
