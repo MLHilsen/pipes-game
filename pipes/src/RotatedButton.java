@@ -14,14 +14,16 @@ public class RotatedButton extends JButton
     private final Grid grid;
     private final Runnable onGridComplete;
     private final int buttonSize;
+    private final GUI gui;
 
-    public RotatedButton(ImageIcon originalIcon, Cell cell, int buttonSize, Grid grid, Runnable onGridComplete)
+    public RotatedButton(ImageIcon originalIcon, Cell cell, int buttonSize, Grid grid, Runnable onGridComplete, GUI gui)
     {
         // Scale the image to fit the button size
         this.cell = cell;
         this.grid = grid;
         this.onGridComplete = onGridComplete;
         this.buttonSize = buttonSize;
+        this.gui = gui;
 
         this.icon = scaleIcon(originalIcon, buttonSize, buttonSize); // Replace 80 with your button size
         setIcon(this.icon); // Set the scaled icon
@@ -104,9 +106,15 @@ public class RotatedButton extends JButton
             cell.rotate((int) degrees);
             repaint();
 
-            if (cell.hasExposedWallToFilledNeighbor(grid) && !cell.isSource()) {
+            if (cell.hasExposedWallToFilledNeighbor(grid, cell) && !cell.isSource()) {
                 cell.setFilled(true);
+                grid.floodNeighbors_r(cell, gui);
                 updateIcon(true); // Update the icon to the filled version
+            }
+            if (cell.isFilled())
+            {
+                grid.floodNeighbors_r(cell, gui);
+                updateIcon(true);
             }
         }
     }
@@ -120,9 +128,15 @@ public class RotatedButton extends JButton
             cell.rotate(-(int) degrees); 
             repaint(); // Repaint the button to reflect the rotation
 
-            if (cell.hasExposedWallToFilledNeighbor(grid) && !cell.isSource()) {
+            if (cell.hasExposedWallToFilledNeighbor(grid, cell) && !cell.isSource()) {
                 cell.setFilled(true);
+                grid.floodNeighbors_r(cell, gui);
                 updateIcon(true); // Update the icon to the filled version
+            }
+            if (cell.isFilled())
+            {
+                grid.floodNeighbors_r(cell, gui);
+                updateIcon(true);
             }
         }
     }
@@ -157,7 +171,7 @@ public class RotatedButton extends JButton
         return locked;
     }
 
-    private void updateIcon(boolean filled)
+    public void updateIcon(boolean filled)
     {
         ImageIcon newIcon;
         switch (cell.getSegment()) {

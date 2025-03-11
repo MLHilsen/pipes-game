@@ -150,7 +150,7 @@ public class Cell {
         return false;
     }
 
-    private boolean neighborsLink(Cell current, Cell neighbor) {
+    public boolean neighborsLink(Cell current, Cell neighbor) {
         int currentRotation = current.getRotation();
         int neighborRotation = neighbor.getRotation();
     
@@ -181,25 +181,25 @@ public class Cell {
         return false;
     }
 
-    public boolean hasExposedWallToFilledNeighbor(Grid grid)
+    public boolean hasExposedWallToFilledNeighbor(Grid grid, Cell cell)
     {
-        int i = coords[0];
-        int j = coords[1];
+        int i = cell.coords[0];
+        int j = cell.coords[1];
     
         // Check Up
-        if (i - 1 >= 0 && grid.grid[i - 1][j].isFilled() && neighborsLink(this, grid.grid[i - 1][j])) {
+        if (i - 1 >= 0 && grid.grid[i - 1][j].isFilled() && neighborsLink(cell, grid.grid[i - 1][j])) {
             return true;
         }
         // Check Down
-        else if (i + 1 < grid.dimensions && grid.grid[i + 1][j].isFilled() && neighborsLink(this, grid.grid[i + 1][j])) {
+        else if (i + 1 < grid.dimensions && grid.grid[i + 1][j].isFilled() && neighborsLink(cell, grid.grid[i + 1][j])) {
             return true;
         }
         // Check Left
-        else if (j - 1 >= 0 && grid.grid[i][j - 1].isFilled() && neighborsLink(this, grid.grid[i][j - 1])) {
+        else if (j - 1 >= 0 && grid.grid[i][j - 1].isFilled() && neighborsLink(cell, grid.grid[i][j - 1])) {
             return true;
         }
         // Check Right
-        else if (j + 1 < grid.dimensions && grid.grid[i][j + 1].isFilled() && neighborsLink(this, grid.grid[i][j + 1])) {
+        else if (j + 1 < grid.dimensions && grid.grid[i][j + 1].isFilled() && neighborsLink(cell, grid.grid[i][j + 1])) {
             return true;
         }
     

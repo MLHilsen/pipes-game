@@ -1,10 +1,18 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import javax.swing.*;
 
 public class GUI
 {
+    private final Map<Cell, RotatedButton> cellButtonMap = new HashMap<>();
+
+    public Map<Cell, RotatedButton> getCellButtonMap() {
+        return cellButtonMap;
+    }
+
     public void createGUI(Grid grid)
     {
         JFrame frame = new JFrame("Pipes Game");
@@ -58,20 +66,20 @@ public class GUI
                 RotatedButton button;
                 switch (segment) {
                     case Straight -> {
-                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(straight_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
-                        else {button = new RotatedButton(straight, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(straight_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid), this);}
+                        else {button = new RotatedButton(straight, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid), this);}
                     }
                     case Fork -> {
-                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(fork_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
-                        else {button = new RotatedButton(fork, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(fork_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid), this);}
+                        else {button = new RotatedButton(fork, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid), this);}
                     }
                     case Corner -> {
-                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(corner_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
-                        else {button = new RotatedButton(corner, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(corner_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid), this);}
+                        else {button = new RotatedButton(corner, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid), this);}
                     }
                     case End -> {
-                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(end_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
-                        else {button = new RotatedButton(end, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid));}
+                        if (grid.grid[i][j].isSource()) {button = new RotatedButton(end_source, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid), this);}
+                        else {button = new RotatedButton(end, cell, buttonSize, grid, () -> displayVerifierMessage(frame, grid), this);}
                     }
                     default -> throw new AssertionError();
                 }
@@ -98,6 +106,8 @@ public class GUI
                     }
                 });
     
+                cellButtonMap.put(cell, button); // Add to hashmap
+
                 // Add the button to the grid panel
                 gridPanel.add(button);
                 randomlyRotateButton(button);

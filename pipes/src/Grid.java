@@ -57,6 +57,64 @@ public class Grid
         return true;
     }
 
+    public void floodNeighbors_r(Cell cell, GUI gui) {
+        /* 
+            * Get a list of all immediate neighbors
+            * Check if walls connect with flooded cell
+            * If do, flood and add THAT cell's neighbors to list
+            * Repeat until list is empty
+            */
+        // Get the coordinates of the current cell
+        int i = cell.coords[0];
+        int j = cell.coords[1];
+    
+        // Check all four neighbors (up, down, left, right)
+        // Up
+        if (i - 1 >= 0) {
+            Cell neighbor = grid[i - 1][j];
+            if (!neighbor.isFilled() && cell.neighborsLink(cell, neighbor)) {
+                neighbor.setFilled(true);
+                updateButtonIcon(neighbor, gui);
+                floodNeighbors_r(neighbor, gui); // Recursively flood the neighbor
+            }
+        }
+        // Down
+        if (i + 1 < dimensions) {
+            Cell neighbor = grid[i + 1][j];
+            if (!neighbor.isFilled() && cell.neighborsLink(cell, neighbor)) {
+                neighbor.setFilled(true);
+                updateButtonIcon(neighbor, gui);
+                floodNeighbors_r(neighbor, gui); // Recursively flood the neighbor
+            }
+        }
+        // Left
+        if (j - 1 >= 0) {
+            Cell neighbor = grid[i][j - 1];
+            if (!neighbor.isFilled() && cell.neighborsLink(cell, neighbor)) {
+                neighbor.setFilled(true);
+                updateButtonIcon(neighbor, gui);
+                floodNeighbors_r(neighbor, gui); // Recursively flood the neighbor
+            }
+        }
+        // Right
+        if (j + 1 < dimensions) {
+            Cell neighbor = grid[i][j + 1];
+            if (!neighbor.isFilled() && cell.neighborsLink(cell, neighbor)) {
+                neighbor.setFilled(true);
+                updateButtonIcon(neighbor, gui);
+                floodNeighbors_r(neighbor, gui); // Recursively flood the neighbor
+            }
+        }
+    }
+
+    private void updateButtonIcon(Cell cell, GUI gui) {
+        RotatedButton button = gui.getCellButtonMap().get(cell);
+        if (button != null) {
+            button.updateIcon(cell.isFilled()); // Update the icon based on the filled state
+            button.repaint(); // Repaint the button to reflect the change
+        }
+    }
+
     private List<Cell> getNeighbors(int i, int j, boolean visited) // row, col
     {
         List<Cell> neighbors = new ArrayList<>();
