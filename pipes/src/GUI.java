@@ -23,15 +23,15 @@ public class GUI
         gridPanel.setLayout(new GridLayout(grid.dimensions, grid.dimensions)); // Layout for a grid of buttons
 
 
-        ImageIcon straight = new ImageIcon("src/imgs/Straight.png");
-        ImageIcon fork = new ImageIcon("src/imgs/Fork.png");
-        ImageIcon corner = new ImageIcon("src/imgs/Corner.png");
-        ImageIcon end = new ImageIcon("src/imgs/End.png");
+        ImageIcon straight = new ImageIcon(GUI.class.getResource("/imgs/Straight.png"));
+        ImageIcon fork = new ImageIcon(GUI.class.getResource("/imgs/Fork.png"));
+        ImageIcon corner = new ImageIcon(GUI.class.getResource("/imgs/Corner.png"));
+        ImageIcon end = new ImageIcon(GUI.class.getResource("/imgs/End.png"));
 
-        ImageIcon straight_source = new ImageIcon("src/imgs/Straight_Source.png");
-        ImageIcon fork_source = new ImageIcon("src/imgs/Fork_Source.png");
-        ImageIcon corner_source = new ImageIcon("src/imgs/Corner_Source.png");
-        ImageIcon end_source = new ImageIcon("src/imgs/End_Source.png");
+        ImageIcon straight_source = new ImageIcon(GUI.class.getResource("/imgs/Straight_Source.png"));
+        ImageIcon fork_source = new ImageIcon(GUI.class.getResource("/imgs/Fork_Source.png"));
+        ImageIcon corner_source = new ImageIcon(GUI.class.getResource("/imgs/Corner_Source.png"));
+        ImageIcon end_source = new ImageIcon(GUI.class.getResource("/imgs/End_Source.png"));
 
         // Get Screen Size
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

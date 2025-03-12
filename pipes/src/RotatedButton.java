@@ -155,10 +155,10 @@ public class RotatedButton extends JButton
     {
         ImageIcon newIcon;
         switch (cell.getSegment()) {
-            case Straight -> newIcon = filled ? new ImageIcon("src/imgs/Straight_Filled.png") : new ImageIcon("src/imgs/Straight.png");
-            case Fork -> newIcon = filled ? new ImageIcon("src/imgs/Fork_Filled.png") : new ImageIcon("src/imgs/Fork.png");
-            case Corner -> newIcon = filled ? new ImageIcon("src/imgs/Corner_Filled.png") : new ImageIcon("src/imgs/Corner.png");
-            case End -> newIcon = filled ? new ImageIcon("src/imgs/End_Filled.png") : new ImageIcon("src/imgs/End.png");
+            case Straight -> newIcon = filled ? new ImageIcon(RotatedButton.class.getResource("/imgs/Straight_Filled.png")) : new ImageIcon(RotatedButton.class.getResource("/imgs/Straight.png"));
+            case Fork -> newIcon = filled ? new ImageIcon(RotatedButton.class.getResource("/imgs/Fork_Filled.png")) : new ImageIcon(RotatedButton.class.getResource("/imgs/Fork.png"));
+            case Corner -> newIcon = filled ? new ImageIcon(RotatedButton.class.getResource("/imgs/Corner_Filled.png")) : new ImageIcon(RotatedButton.class.getResource("/imgs/Corner.png"));
+            case End -> newIcon = filled ? new ImageIcon(RotatedButton.class.getResource("/imgs/End_Filled.png")) : new ImageIcon(RotatedButton.class.getResource("/imgs/End.png"));
             default -> throw new AssertionError();
         }
         setIcon(scaleIcon(newIcon, buttonSize, buttonSize));
